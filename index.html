@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>StoryMining — Find the stories only you can tell</title>
-<meta name="description" content="A Name, Place, Animal, Thing workshop by Lux Narayan. Map your life, mine the probes, cut the shape, show the story.">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>StoryMining — find the stories only you can tell</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -61,9 +61,27 @@ h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
   padding-block:clamp(48px,8vw,88px) clamp(40px,6vw,64px);
 }
 .hero-in{display:flex;flex-direction:column;gap:22px}
-.brandrow{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.wordmark{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.01em}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(24px,4vw,48px);align-items:center;margin-top:clamp(12px,3vw,32px)}
+.hero-text{display:flex;flex-direction:column;gap:22px;min-width:0}
+.grid-art{display:block;width:100%;max-width:420px;height:auto;margin-inline:auto}
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr}.grid-art{max-width:360px}}
+.topnav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.wordmark{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.01em;text-decoration:none}
 .wordmark span{color:var(--name)}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px;box-shadow:0 1px 3px rgba(43,35,22,.05)}
+.seg a{font-family:var(--display);font-weight:700;font-size:15px;line-height:1;padding:12px 20px;border-radius:999px;text-decoration:none;color:var(--muted);white-space:nowrap;transition:background .15s,color .15s}
+.seg a:hover{color:var(--ink);background:var(--surface-warm)}
+.seg a.current{background:var(--ink);color:#FFF9EC}
+.seg a:focus-visible{outline:2px solid var(--name);outline-offset:2px}
+.seg a .go{color:var(--name);margin-left:6px}
+@media (max-width:520px){.topnav{flex-direction:column;align-items:flex-start}.seg{width:100%}.seg a{flex:1;text-align:center;padding:12px 10px}}
+.teamlink{display:flex;align-items:center;gap:14px;align-self:flex-start;max-width:100%;margin-top:8px;padding:12px 14px 12px 14px;border-radius:18px;background:var(--ink);text-decoration:none;font-size:15px;line-height:1.4;color:rgba(255,249,236,.78);transition:transform .15s,background .15s}
+.teamlink:hover{background:#43381f;transform:translateY(-1px)}
+.teamlink:focus-visible{outline:3px solid var(--name);outline-offset:3px}
+.teamlink .ico{width:34px;height:34px;border-radius:50%;background:rgba(245,181,74,.18);color:#F5B54A;display:flex;align-items:center;justify-content:center;flex:none}
+.teamlink .ico svg{width:18px;height:18px;display:block}
+.teamlink b{color:#FFF9EC;font-weight:600;display:block}
+.teamlink .arrow{flex:none;background:#F5B54A;color:var(--ink);font-family:var(--display);font-weight:700;font-size:14px;padding:9px 14px;border-radius:999px;white-space:nowrap}
 h1{font-weight:700;font-size:clamp(40px,7vw,78px);line-height:1.02;letter-spacing:-.025em;max-width:16ch}
 h1 em{font-style:normal;color:var(--name)}
 .dek{max-width:52ch;font-size:clamp(18px,2.2vw,21px);line-height:1.55;color:var(--muted);margin:2px 0 0}
@@ -105,18 +123,19 @@ section{padding-block:clamp(40px,6vw,68px)}
 /* map */
 .map-wrap{border:1px solid var(--line);border-radius:18px;background:var(--surface);overflow:hidden}
 .scroll{overflow-x:auto}
-table.grid{border-collapse:collapse;width:100%;min-width:720px;font-family:var(--mono);font-size:11px}
+table.grid{border-collapse:collapse;width:100%;min-width:440px;font-family:var(--mono);font-size:11px}
 table.grid th,table.grid td{border-bottom:1px solid var(--line);text-align:center;padding:9px 6px}
 table.grid thead th{color:var(--faint);font-weight:500;letter-spacing:.07em;text-transform:uppercase;
   font-size:9.5px;white-space:nowrap;background:var(--surface-warm)}
-table.grid thead th:first-child{text-align:left;padding-left:16px;width:160px}
+table.grid thead th:first-child{text-align:left;padding-left:16px;width:150px}
 table.grid th.pl{text-align:left;padding:9px 16px;white-space:nowrap;font-family:var(--display);
   font-weight:700;font-size:13px;color:var(--place);border-right:1px solid var(--line)}
 table.grid th.pl span{display:block;font-family:var(--mono);font-weight:400;font-size:9px;
   color:var(--faint);letter-spacing:.06em;margin-top:2px;text-transform:uppercase}
 td.on{position:relative}
 td.on::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--name)}
-td.hot::after{width:10px;height:10px;background:var(--thing)}
+td.hot{position:relative}
+td.hot::after{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--thing)}
 .mapkey{display:flex;gap:20px;flex-wrap:wrap;padding:14px 16px;font-size:11px;color:var(--faint);font-family:var(--mono)}
 
 .pull{margin-top:26px;padding:20px 24px;background:var(--surface-warm);border-radius:16px;
@@ -125,7 +144,7 @@ td.hot::after{width:10px;height:10px;background:var(--thing)}
 
 /* map scene — a dusk skyline behind the grid, low and quiet */
 .map-scene{position:relative}
-.map-scene .skyline{position:absolute;left:0;right:0;bottom:-14px;height:150px;z-index:0;
+.map-scene .skyline{position:absolute;left:0;right:0;width:100%;bottom:-14px;height:150px;z-index:0;
   opacity:.16;pointer-events:none}
 .map-scene .skyline svg{width:100%;height:100%;display:block}
 .map-scene > .map-wrap,.map-scene > .pull{position:relative;z-index:1}
@@ -185,6 +204,9 @@ td.hot::after{width:10px;height:10px;background:var(--thing)}
 .cred{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:4px}
 @media (max-width:760px){.cred{grid-template-columns:1fr}}
 .cred-item b{display:block;font-family:var(--display);font-weight:700;font-size:19px;margin-bottom:6px}
+.cred-more{margin-top:18px;font-size:15px}
+.cred-more a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--name);padding-bottom:2px}
+.cred-more a:hover{color:var(--name)}
 .cred-item p{margin:0;font-size:14.5px;line-height:1.45;color:var(--muted)}
 
 /* CTA */
@@ -193,7 +215,7 @@ td.hot::after{width:10px;height:10px;background:var(--thing)}
 .cta-box h2{font-size:clamp(24px,3.2vw,30px);color:#fff;margin:8px 0 4px}
 .cta-box p.note{margin:0 0 4px;max-width:56ch;font-size:15.5px;line-height:1.5;color:rgba(255,249,236,.68)}
 .cta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
-@media (max-width:760px){.cta-grid{grid-template-columns:1fr}}
+@media (max-width:760px){.cta-grid,.cta-box.compact .cta-grid{grid-template-columns:1fr}}
 .cta-card{display:flex;flex-direction:column;gap:10px;padding:22px;border-radius:18px;
   text-decoration:none;color:#fff;min-height:148px}
 .cta-card .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;opacity:.88}
@@ -203,6 +225,9 @@ td.hot::after{width:10px;height:10px;background:var(--thing)}
 .cta-card.green{background:var(--place)}
 .cta-card.rust{background:var(--thing)}
 .cta-card:hover{opacity:.9}
+.cta-maven{margin-top:14px;font-size:13px;line-height:1.5;color:var(--muted)}
+.cta-maven a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.cta-box:not(.compact) .cta-maven{margin-top:16px;color:rgba(255,249,236,.7)}
 .cta-sub{margin-top:22px;font-size:13px;color:rgba(255,249,236,.5)}
 .cta-sub a{text-decoration:underline;color:rgba(255,249,236,.85)}
 
@@ -214,6 +239,7 @@ td.hot::after{width:10px;height:10px;background:var(--thing)}
 
 /* slim card style — used by both the top and bottom CTA */
 .cta-grid.slim{gap:8px}
+@media (max-width:760px){.cta-box.compact .cta-grid{grid-template-columns:1fr}}
 .cta-card.slim{flex-direction:row;align-items:center;gap:10px;min-height:0;
   padding:12px 14px;border-radius:11px;background:var(--surface-warm);color:var(--ink);
   border-left:3px solid var(--k)}
@@ -229,21 +255,33 @@ td.hot::after{width:10px;height:10px;background:var(--thing)}
 
 footer{padding-block:28px 48px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;
   color:var(--faint);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 </style>
+
 </head>
 <body>
 <div class="gutter">
 <div class="wrap">
 
-  <header class="hero">
+  <header class="hero" id="top">
     <div class="hero-in">
-      <div class="brandrow">
-        <span class="wordmark">Story<span>Mining</span></span>
-        <span class="eyebrow">A Name, Place, Animal, Thing workshop</span>
+      <nav class="topnav" aria-label="Site">
+        <a class="wordmark" href="#top">Story<span>Mining</span></a>
+        <span class="seg">
+          <a class="current" href="#top" aria-current="page">For individuals</a>
+          <a href="teams.html">For teams<span class="go">→</span></a>
+        </span>
+      </nav>
+      <div class="hero-grid">
+        <div class="hero-text">
+        <span class="eyebrow">For individuals</span>
+        <h1>Find the stories <em>only you can tell</em></h1>
+        <p class="dek">Most storytelling training starts at delivery. This starts two steps earlier: finding the story in the first place.</p>
+        <div class="npat-strip"><span>Name</span><span>Place</span><span>Animal</span><span>Thing</span></div>
+        <a class="teamlink" href="teams.html"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 19c0-3.3 2.7-5 6-5s6 1.7 6 5"/><circle cx="17" cy="9" r="2.4"/><path d="M17 14c2.5 0 4 1.4 4 4"/></svg></span><span><b>Leading a team or a company?</b>This page is for individuals. The workshop for client-facing teams has its own page.</span><span class="arrow">For teams →</span></a>
+        </div>
+        <svg class="grid-art" viewBox="0 0 420 284" role="img" aria-label="A grid of places down the side and roles across the top. Most cells are empty. A few hold colored dots."><rect x="10" y="22" width="400" height="250" rx="20" fill="#fff" stroke="var(--line)" stroke-width="1.5"/><text x="138.0" y="54" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".06em" fill="var(--faint)">EMPLOYEE</text><text x="214.0" y="54" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".06em" fill="var(--faint)">FATHER</text><text x="290.0" y="54" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".06em" fill="var(--faint)">FOUNDER</text><text x="366.0" y="54" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".06em" fill="var(--faint)">FRIEND</text><text x="28" y="101.0" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".06em" fill="var(--faint)">MUMBAI</text><text x="28" y="165.0" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".06em" fill="var(--faint)">DUBAI</text><text x="28" y="229.0" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".06em" fill="var(--faint)">NEW YORK</text><rect x="104" y="66" width="68" height="56" rx="10" fill="var(--surface-warm)"/><circle cx="138.0" cy="94.0" r="6.5" fill="var(--name)"/><rect x="180" y="66" width="68" height="56" rx="10" fill="none" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3 4"/><rect x="256" y="66" width="68" height="56" rx="10" fill="var(--surface-warm)"/><circle cx="281.0" cy="94.0" r="6.5" fill="var(--animal)"/><circle cx="299.0" cy="94.0" r="6.5" fill="var(--thing)"/><rect x="332" y="66" width="68" height="56" rx="10" fill="none" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3 4"/><rect x="104" y="130" width="68" height="56" rx="10" fill="var(--surface-warm)"/><circle cx="129.0" cy="158.0" r="6.5" fill="var(--place)"/><circle cx="147.0" cy="158.0" r="6.5" fill="var(--thing)"/><rect x="180" y="130" width="68" height="56" rx="10" fill="var(--surface-warm)"/><circle cx="214.0" cy="158.0" r="6.5" fill="var(--animal)"/><rect x="256" y="130" width="68" height="56" rx="10" fill="none" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3 4"/><rect x="332" y="130" width="68" height="56" rx="10" fill="none" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3 4"/><rect x="104" y="194" width="68" height="56" rx="10" fill="none" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3 4"/><rect x="180" y="194" width="68" height="56" rx="10" fill="none" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3 4"/><rect x="256" y="194" width="68" height="56" rx="10" fill="var(--surface-warm)"/><circle cx="272.0" cy="222.0" r="6.5" fill="var(--name)"/><circle cx="290.0" cy="222.0" r="6.5" fill="var(--place)"/><circle cx="308.0" cy="222.0" r="6.5" fill="var(--animal)"/><rect x="332" y="194" width="68" height="56" rx="10" fill="var(--surface-warm)"/><circle cx="366.0" cy="222.0" r="6.5" fill="var(--thing)"/></svg>
       </div>
-      <h1>Find the stories <em>only you can tell</em></h1>
-      <p class="dek">Most storytelling training starts at delivery. This starts two steps earlier: finding the story in the first place.</p>
-      <div class="npat-strip"><span>Name</span><span>Place</span><span>Animal</span><span>Thing</span></div>
     </div>
   </header>
 
@@ -251,19 +289,20 @@ footer{padding-block:28px 48px;font-family:var(--mono);font-size:11px;letter-spa
     <div class="cta-box compact">
       <span class="eyebrow">Already convinced? Pick one — this repeats at the bottom if you'd rather keep reading first.</span>
       <div class="cta-grid slim">
-        <a class="cta-card slim" style="--k:var(--name)" href="https://npat.substack.com/" target="_blank" rel="noopener">
+        <a class="cta-card slim" style="--k:var(--name)" href="https://npat.substack.com/">
           <span class="pill-text"><span class="tag">Free · ongoing</span><span class="title">Subscribe to the newsletter</span></span>
           <span class="arrow">→</span>
         </a>
-        <a class="cta-card slim" style="--k:var(--place)" href="https://maven.com/p/5ddc31/story-mining-human-told-ai-shaped-find-stories-you-forgot" target="_blank" rel="noopener">
-          <span class="pill-text"><span class="tag">Free · live · Nov 11</span><span class="title">Join the Lightning Session (1 hour)</span></span>
+        <a class="cta-card slim" style="--k:var(--place)" href="https://maven.com/p/4b8907/story-mining-human-told-ai-shaped-find-stories-you-forgot">
+          <span class="pill-text"><span class="tag">Free · live · Nov 18</span><span class="title">Join the Lightning Session (1 hour)</span></span>
           <span class="arrow">→</span>
         </a>
-        <a class="cta-card slim" style="--k:var(--thing)" href="https://maven.com/lux-narayan/storymining" target="_blank" rel="noopener">
+        <a class="cta-card slim" style="--k:var(--thing)" href="https://maven.com/lux-narayan/storymining">
           <span class="pill-text"><span class="tag">$300 · live · Dec 5</span><span class="title">Sign up for the full workshop (4 hours)</span></span>
           <span class="arrow">→</span>
         </a>
       </div>
+      <p class="cta-maven">The Lightning Session and the workshop run on <a href="https://maven.com">Maven</a>, a platform for live online courses.</p>
     </div>
   </section>
 
@@ -354,16 +393,13 @@ footer{padding-block:28px 48px;font-family:var(--mono);font-size:11px;letter-spa
         <div class="scroll">
           <table class="grid">
             <thead><tr><th>Place ↓ &nbsp;/&nbsp; Name →</th>
-              <th>Kid</th><th>Student</th><th>Employee</th><th>Teacher</th><th>Entrepreneur</th><th>Husband</th><th>Father</th><th>Author</th></tr></thead>
+              <th>Kid</th><th>Student</th><th>Employee</th><th>Entrepreneur</th><th>Father</th></tr></thead>
             <tbody>
-              <tr><th class="pl">Bombay<span>the first one</span></th><td class="on"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-              <tr><th class="pl">Dubai<span>school years</span></th><td class="on"></td><td class="on"></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-              <tr><th class="pl">Madras<span>IIT</span></th><td></td><td class="on"></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-              <tr><th class="pl">Calcutta<span>IIM</span></th><td></td><td class="on"></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-              <tr><th class="pl">Mumbai<span>ABCL, then alone</span></th><td></td><td></td><td class="on"></td><td></td><td class="on"></td><td></td><td></td><td></td></tr>
-              <tr><th class="pl">Dubai<span>advertising</span></th><td></td><td></td><td class="hot"></td><td class="on"></td><td></td><td class="on"></td><td class="hot"></td><td></td></tr>
-              <tr><th class="pl">Chennai<span>Eyes &amp; Feet, Unmetric</span></th><td></td><td></td><td></td><td></td><td class="on"></td><td class="on"></td><td class="on"></td><td></td></tr>
-              <tr><th class="pl">New Jersey<span>Unmetric, StreamAlive</span></th><td></td><td></td><td></td><td></td><td class="on"></td><td class="on"></td><td class="on"></td><td class="on"></td></tr>
+              <tr><th class="pl">Bombay</th><td class="on"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><th class="pl">Dubai</th><td class="on"></td><td></td><td class="hot"></td><td></td><td class="hot"></td></tr>
+              <tr><th class="pl">Madras</th><td></td><td class="on"></td><td></td><td></td><td></td></tr>
+              <tr><th class="pl">Mumbai</th><td></td><td></td><td class="on"></td><td class="on"></td><td></td></tr>
+              <tr><th class="pl">New Jersey</th><td></td><td></td><td></td><td class="on"></td><td class="on"></td></tr>
             </tbody>
           </table>
         </div>
@@ -395,7 +431,7 @@ footer{padding-block:28px 48px;font-family:var(--mono);font-size:11px;letter-spa
           <span class="co">Dubai · Employee</span>
           <div class="probe a"><b>Animal</b><span>—</span></div>
           <div class="probe t"><b>Thing</b><span>A meeting room, a TV on somewhere</span></div>
-          <p class="seed">September 11th. You remember exactly where you were standing. The client wanted to <em>carry on with the meeting</em>, as though nothing had happened.</p>
+          <p class="seed">The day the world stopped. You remember exactly where you were standing. The client wanted to <em>carry on with the meeting</em>, as though nothing had happened.</p>
         </div>
       </div>
       <p class="pull" style="--k:var(--thing)">Same city, same year, two different names — two stories with nothing in common. <b>That's the grid earning its keep.</b></p>
@@ -413,7 +449,7 @@ footer{padding-block:28px 48px;font-family:var(--mono);font-size:11px;letter-spa
         <div class="lens" style="--k:var(--animal)"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="1.5"/></svg></span><b>Square</b><p>It happened around me, in my vicinity.</p></div>
         <div class="lens" style="--k:var(--thing)"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2 21 7v10l-9 5-9-5V7l9-5Z"/><path d="M12 2v10M3 7l9 5 9-5M12 12v10"/></svg></span><b>Cube</b><p>It happened in the world, and I was somewhere when it did.</p></div>
       </div>
-      <p class="pull">A Cube story is still told from the Point. September 11th isn't the story — a room no one could reach, and a client who wanted to keep going, is. <b>You're always the point of contact.</b></p>
+      <p class="pull">A Cube story is still told from the Point. The world event isn't the story — a room no one could reach, and a client who wanted to keep going, is. <b>You're always the point of contact.</b></p>
     </div>
   </section>
 
@@ -436,7 +472,7 @@ footer{padding-block:28px 48px;font-family:var(--mono);font-size:11px;letter-spa
   </section>
 
   <section>
-    <div class="sec-top"><h2>Who's asking</h2><span class="eyebrow">The receipts</span></div>
+    <div class="sec-top"><h2>About me</h2><span class="eyebrow">Track record</span></div>
     <div class="cred-row">
       <img class="avatar" src="data:image/jpeg;base64,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" alt="Lux Narayan" width="104" height="104">
 
@@ -447,6 +483,7 @@ footer{padding-block:28px 48px;font-family:var(--mono);font-size:11px;letter-spa
           <div class="cred-item"><b style="color:var(--place)">Stage</b><p>Years speaking from stages, plus a handful of open mics, one of them at the Comedy Cellar — all hunting the same thing: the one detail that makes a room lean in.</p></div>
           <div class="cred-item"><b style="color:var(--animal)">The book</b><p>Name, Place, Animal, Thing, an Amazon bestseller. This page is the method inside it, turned into a workshop.</p></div>
         </div>
+        <p class="cred-more"><a href="https://luxnarayan.com">The talk, the stand-up and more at luxnarayan.com <span aria-hidden="true">→</span></a></p>
       </div>
     </div>
     <p class="pull">I founded StreamAlive after two years of watching live audiences get ignored. <b>Every method on this page, I used on myself first.</b></p>
@@ -458,29 +495,31 @@ footer{padding-block:28px 48px;font-family:var(--mono);font-size:11px;letter-spa
       <h2>Pick your way in</h2>
       <p class="note">Free to try, or go straight to the full workshop. Every door leads to the same grid.</p>
       <div class="cta-grid slim">
-        <a class="cta-card slim" style="--k:var(--name)" href="https://npat.substack.com/" target="_blank" rel="noopener">
+        <a class="cta-card slim" style="--k:var(--name)" href="https://npat.substack.com/">
           <span class="pill-text"><span class="tag">Free · ongoing</span><span class="title">Subscribe to the newsletter</span></span>
           <span class="arrow">→</span>
         </a>
-        <a class="cta-card slim" style="--k:var(--place)" href="https://maven.com/p/5ddc31/story-mining-human-told-ai-shaped-find-stories-you-forgot" target="_blank" rel="noopener">
-          <span class="pill-text"><span class="tag">Free · live · Nov 11</span><span class="title">Join the Lightning Session (1 hour)</span></span>
+        <a class="cta-card slim" style="--k:var(--place)" href="https://maven.com/p/4b8907/story-mining-human-told-ai-shaped-find-stories-you-forgot">
+          <span class="pill-text"><span class="tag">Free · live · Nov 18</span><span class="title">Join the Lightning Session (1 hour)</span></span>
           <span class="arrow">→</span>
         </a>
-        <a class="cta-card slim" style="--k:var(--thing)" href="https://maven.com/lux-narayan/storymining" target="_blank" rel="noopener">
+        <a class="cta-card slim" style="--k:var(--thing)" href="https://maven.com/lux-narayan/storymining">
           <span class="pill-text"><span class="tag">$300 · live · Dec 5</span><span class="title">Sign up for the full workshop (4 hours)</span></span>
           <span class="arrow">→</span>
         </a>
       </div>
-      <p class="cta-sub">Bringing this to your team or company? <a href="mailto:lux@streamalive.com">Email me</a> and we'll find a time.</p>
+      <p class="cta-maven">The Lightning Session and the workshop run on <a href="https://maven.com">Maven</a>, a platform for live online courses.</p>
+      <p class="cta-sub">Bringing this to your team or company? <a href="teams.html">See the team workshop</a> or <a href="https://www.linkedin.com/in/luxnarayan/">message me on LinkedIn</a>.</p>
     </div>
   </section>
 
   <footer>
     <span>StoryMining · Name, Place, Animal, Thing</span>
-    <span>Grid built from Lux's own notes — correct freely</span>
+    <a href="https://www.linkedin.com/in/luxnarayan/">Lux Narayan on LinkedIn</a>
   </footer>
 
 </div>
 </div>
+
 </body>
 </html>

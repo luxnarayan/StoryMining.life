@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>StoryMining for client-facing teams</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+
+<style>
+/* Layout concept: the same sunlit page as the StoryMining site, rebuilt for a CEO reading it cold.
+   Each argument gets one drawn picture: a table with two people, an iceberg, a row of identical
+   proposals above a row of different people, a thread of beads. Flat shapes in the four NPAT hues,
+   no photos. Committed single light theme, so every color is set explicitly. */
+:root{
+  color-scheme:light;
+  --bg:#FFF9EC;
+  --surface:#FFFFFF;
+  --surface-warm:#FFF3DA;
+  --ink:#2B2316;
+  --muted:#71665A;
+  --faint:#857A6A;
+  --line:#EFE3C8;
+  --name:#B36B00;
+  --place:#26804A;
+  --animal:#6E53B8;
+  --thing:#C2412A;
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Inter",-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background-color:var(--bg);color:var(--ink);
+  font-family:var(--body);font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(ellipse 820px 520px at 12% 4%, rgba(201,122,0,.14), transparent 60%),
+    radial-gradient(ellipse 700px 560px at 92% 24%, rgba(110,83,184,.10), transparent 58%),
+    radial-gradient(ellipse 760px 520px at 8% 60%, rgba(46,142,82,.09), transparent 58%),
+    radial-gradient(ellipse 820px 540px at 94% 88%, rgba(206,74,46,.09), transparent 58%),
+    radial-gradient(circle, rgba(43,35,22,.07) 1px, transparent 1.6px);
+  background-repeat:no-repeat,no-repeat,no-repeat,no-repeat,repeat;
+  background-size:auto,auto,auto,auto,26px 26px;
+}
+img{max-width:100%}
+.gutter{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1080px;margin:0 auto}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+section{padding-block:clamp(40px,6vw,68px)}
+.sec-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.sec-top h2{font-size:clamp(24px,3vw,32px);font-weight:700;letter-spacing:-.01em}
+.lede{max-width:62ch;font-size:17px;color:var(--muted);margin:0 0 24px}
+.pull{margin-top:26px;padding:20px 24px;background:var(--surface-warm);border-radius:16px;font-size:18px;line-height:1.5;max-width:60ch}
+.pull b{color:var(--name)}
+
+/* drawing colors for inline SVG */
+svg .f-name{fill:var(--name)} svg .f-place{fill:var(--place)} svg .f-animal{fill:var(--animal)} svg .f-thing{fill:var(--thing)}
+svg .f-ink{fill:var(--ink)} svg .f-white{fill:#fff} svg .f-warm{fill:var(--surface-warm)}
+svg .f-grey{fill:#CBC2AE} svg .f-doc{fill:#EAE2D0} svg .f-docline{fill:#D4CAB3} svg .f-water{fill:rgba(110,83,184,.09)}
+svg .s-line{stroke:var(--line)} svg .s-ink{stroke:var(--ink)} svg .s-name{stroke:var(--name)}
+svg .s-animal{stroke:var(--animal)} svg .s-faint{stroke:var(--faint)}
+svg .svg-lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;fill:var(--faint)}
+
+/* top navigation */
+.topnav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.wordmark{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.01em;text-decoration:none}
+.wordmark span{color:var(--name)}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px;box-shadow:0 1px 3px rgba(43,35,22,.05)}
+.seg a{font-family:var(--display);font-weight:700;font-size:15px;line-height:1;padding:12px 20px;border-radius:999px;text-decoration:none;color:var(--muted);white-space:nowrap;transition:background .15s,color .15s}
+.seg a:hover{color:var(--ink);background:var(--surface-warm)}
+.seg a.current{background:var(--ink);color:#FFF9EC}
+.seg a:focus-visible{outline:2px solid var(--name);outline-offset:2px}
+.seg a .go{color:var(--name);margin-left:6px}
+@media (max-width:520px){.topnav{flex-direction:column;align-items:flex-start}.seg{width:100%}.seg a{flex:1;text-align:center;padding:12px 10px}}
+
+/* hero */
+.hero{padding-block:clamp(28px,4vw,40px) clamp(28px,5vw,52px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center;margin-top:clamp(28px,5vw,56px)}
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr}}
+.hero-text{display:flex;flex-direction:column;gap:22px;min-width:0}
+h1{font-weight:700;font-size:clamp(36px,5.4vw,60px);line-height:1.05;letter-spacing:-.025em}
+h1 em{font-style:normal;color:var(--name)}
+.dek{max-width:52ch;font-size:clamp(18px,2.1vw,20px);line-height:1.55;color:var(--muted)}
+.cta-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:6px}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#FFF9EC;text-decoration:none;
+  font-family:var(--display);font-weight:700;font-size:17px;padding:15px 24px;border-radius:999px;transition:transform .15s,background .15s}
+.btn:hover{background:#43381f;transform:translateY(-1px)}
+.btn:focus-visible{outline:3px solid var(--name);outline-offset:3px}
+.btn .arrow{font-size:18px}
+.scene{display:block;width:100%;max-width:460px;height:auto;margin-inline:auto}
+@media (max-width:860px){.scene{max-width:380px}}
+
+/* spine */
+.spine-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(24px,4vw,56px);align-items:center;margin-bottom:clamp(28px,4vw,44px)}
+@media (max-width:860px){.spine-grid{grid-template-columns:1fr}}
+.spine{display:flex;flex-direction:column;gap:clamp(10px,1.6vw,16px)}
+.spine p{font-family:var(--display);font-weight:600;font-size:clamp(26px,4vw,42px);line-height:1.14;letter-spacing:-.018em;text-wrap:balance;max-width:22ch}
+.spine p.third{color:var(--name);max-width:26ch}
+.iceberg{display:block;width:100%;max-width:340px;height:auto;margin-inline:auto}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,48px)}
+@media (max-width:760px){.two-col{grid-template-columns:1fr}}
+.two-col > p{font-size:16.5px;line-height:1.62;color:var(--muted);min-width:0}
+.two-col b{color:var(--ink);font-weight:600}
+.claim{font-family:var(--display);font-size:clamp(25px,3.6vw,34px);font-weight:600;line-height:1.3;max-width:720px;margin-bottom:28px;text-wrap:balance}
+
+/* sameness picture */
+.sameness{margin-top:clamp(28px,4vw,44px);background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,3.4vw,34px)}
+.sameness .cap{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:0 0 12px}
+.sameness .cap + .row-svg{margin-bottom:22px}
+.sameness .cap.second{color:var(--name)}
+.row-svg{display:block;width:100%;height:auto}
+.sameness .after{margin-top:16px;font-family:var(--display);font-weight:600;font-size:clamp(20px,2.6vw,26px);letter-spacing:-.01em}
+
+/* AI contrast */
+.contrast{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.contrast{grid-template-columns:1fr}}
+.contrast .c{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 26px;min-width:0}
+.contrast .c.yours{background:var(--surface-warm);border-color:transparent}
+.contrast .head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.contrast .head .ico{width:40px;height:40px;border-radius:12px;background:var(--surface-warm);display:flex;align-items:center;justify-content:center;color:var(--faint);flex:none}
+.contrast .yours .head .ico{background:var(--surface);color:var(--name)}
+.contrast .head svg{width:22px;height:22px;display:block}
+.contrast .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+.contrast .yours .tag{color:var(--name)}
+.contrast p.t{font-size:15.5px;line-height:1.55;color:var(--muted)}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.steps{grid-template-columns:1fr}}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px 20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.step .icon{color:var(--k)}
+.step .icon svg{width:26px;height:26px;display:block}
+.step h3{font-size:22px;font-weight:700;color:var(--k)}
+.step p{font-size:14.5px;line-height:1.5;color:var(--muted)}
+
+/* work + personal */
+.trio{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.trio{grid-template-columns:1fr}}
+.kind{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 26px;min-width:0}
+.kind .top{display:flex;align-items:center;gap:12px}
+.kind .ico{width:40px;height:40px;border-radius:12px;background:var(--surface-warm);color:var(--k);display:flex;align-items:center;justify-content:center;flex:none}
+.kind .ico svg{width:22px;height:22px;display:block}
+.kind .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--k);font-weight:500}
+.kind h3{font-size:22px;font-weight:700;margin:14px 0 8px}
+.kind p{font-size:15.5px;line-height:1.55;color:var(--muted)}
+.kind.both{grid-column:1 / -1;background:var(--surface-warm);border-color:transparent}
+.kind.both .ico{background:var(--surface)}
+.kind.both p{max-width:64ch}
+.kind .src{display:block;margin-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.choice{margin-top:20px;font-size:15px;color:var(--muted);max-width:64ch}
+.choice b{color:var(--ink)}
+
+/* thread */
+.thread{background:var(--ink);color:#FFF9EC;border-radius:24px;padding:clamp(28px,5vw,48px);display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(20px,4vw,48px);align-items:center}
+@media (max-width:860px){.thread{grid-template-columns:1fr}}
+.thread .eyebrow{color:rgba(255,249,236,.55)}
+.thread blockquote{margin:14px 0 18px;font-family:var(--display);font-weight:600;font-size:clamp(24px,3.6vw,38px);line-height:1.2;letter-spacing:-.015em;text-wrap:balance}
+.thread blockquote span{color:#F5B54A}
+.thread .how{font-size:15.5px;line-height:1.55;color:rgba(255,249,236,.72);max-width:60ch}
+.thread .then{margin-top:18px;font-size:16.5px;line-height:1.6;color:rgba(255,249,236,.9);max-width:60ch}
+.beads{display:block;width:100%;max-width:380px;height:auto;margin-inline:auto}
+
+/* formats + timeline */
+.formats{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.formats{grid-template-columns:1fr}}
+.format{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 26px;min-width:0}
+.format .top{display:flex;align-items:center;gap:12px}
+.format .ico{width:40px;height:40px;border-radius:12px;background:var(--surface-warm);color:var(--k);display:flex;align-items:center;justify-content:center;flex:none}
+.format .ico svg{width:22px;height:22px;display:block}
+.format .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+.format h3{font-size:22px;font-weight:700;margin:14px 0 8px}
+.format p{font-size:15.5px;line-height:1.55;color:var(--muted)}
+.zoomnote{margin-top:16px;font-size:15px;color:var(--muted);max-width:68ch}
+.zoomnote b{color:var(--ink)}
+.zoomnote a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--name);text-underline-offset:3px}
+.tl-head{margin:40px 0 20px;display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tl-head h3{font-size:22px;font-weight:700}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;list-style:none;margin:0;padding:0}
+.timeline::before{content:"";position:absolute;left:0;right:0;top:11px;height:2px;background:var(--line)}
+.timeline li{position:relative;padding:34px 18px 0 0;min-width:0}
+.timeline li::before{content:"";position:absolute;left:0;top:2px;width:20px;height:20px;border-radius:50%;background:var(--k);border:4px solid var(--bg);box-shadow:0 0 0 1px var(--k)}
+.timeline .when{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--k);font-weight:500}
+.timeline .what{display:block;margin-top:6px;font-size:15px;line-height:1.5;color:var(--muted)}
+.timeline li:first-child .what{color:var(--ink)}
+@media (max-width:760px){
+  .timeline{grid-template-columns:1fr;gap:22px}
+  .timeline::before{left:9px;right:auto;top:6px;bottom:6px;width:2px;height:auto}
+  .timeline li{padding:0 0 0 38px}
+  .timeline li::before{top:0}
+}
+
+/* credibility */
+.cred-row{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start;margin-bottom:28px}
+@media (max-width:600px){.cred-row{grid-template-columns:1fr;justify-items:start}}
+.avatar{width:104px;height:104px;border-radius:50%;object-fit:cover;display:block;background:linear-gradient(145deg,var(--name),var(--thing));border:3px solid var(--surface);box-shadow:0 6px 18px rgba(43,35,22,.12)}
+.cred{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:4px}
+@media (max-width:760px){.cred{grid-template-columns:1fr}}
+.cred-item{min-width:0}
+.cred-item b{display:block;font-family:var(--display);font-weight:700;font-size:19px;margin-bottom:6px}
+.cred-more{margin-top:18px;font-size:15px}
+.cred-more a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--name);padding-bottom:2px}
+.cred-more a:hover{color:var(--name)}
+.cred-item p{font-size:14.5px;line-height:1.45;color:var(--muted)}
+
+/* closing CTA */
+.cta-box{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:clamp(28px,5vw,48px);box-shadow:0 1px 3px rgba(43,35,22,.05)}
+.cta-box h2{font-size:clamp(26px,3.6vw,38px);margin:8px 0 10px;letter-spacing:-.015em}
+.cta-box .note{max-width:56ch;font-size:16.5px;line-height:1.55;color:var(--muted);margin-bottom:22px}
+.backhome{display:inline-block;margin-top:22px;font-size:15px;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
+.backhome:hover{border-color:var(--name);color:var(--ink)}
+
+footer{padding-block:28px 48px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--faint);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer a{text-decoration:none;border-bottom:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){.btn{transition:none}}
+</style>
+
+</head>
+<body>
+<div class="gutter">
+<div class="wrap">
+
+  <header class="hero">
+    <nav class="topnav" aria-label="Site">
+      <a class="wordmark" href="index.html">Story<span>Mining</span></a>
+      <span class="seg">
+        <a href="index.html">For individuals</a>
+        <a class="current" href="teams.html" aria-current="page">For teams</a>
+      </span>
+    </nav>
+    <div class="hero-grid">
+      <div class="hero-text">
+        <span class="eyebrow">Storytelling workshop for client-facing teams</span>
+        <h1>Your team presents decks. <em>Clients remember stories.</em></h1>
+        <p class="dek">A 4-hour workshop that teaches your client-facing people to find the stories only they have, and tell them in conversations with clients.</p>
+        <div class="cta-row">
+          <a class="btn" href="https://tidycal.com/lux/30min" target="_blank" rel="noopener">Book a conversation <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="spine-grid">
+      <div class="spine">
+        <p>Your deck has your credentials.</p>
+        <p>The room remembers the stories.</p>
+        <p class="third">Your people have done far more than they can remember. Clients only hear what they can recall in the room.</p>
+      </div>
+      <svg class="iceberg" viewBox="0 0 340 330" role="img" aria-label="An iceberg. The small tip above the waterline is what a person recalls in the room. The large body below is everything they have lived, full of stories.">
+  <rect x="0" y="104" width="340" height="226" class="f-water"/>
+  <path d="M0 104 C28 98 52 110 80 104 S132 98 160 104 S212 110 240 104 S292 98 340 104" fill="none" class="s-animal" stroke-width="1.5" opacity=".4"/>
+  <polygon points="120,104 236,104 274,150 292,208 246,264 180,286 114,260 72,208 86,150" class="f-warm s-line" stroke-width="1.5" stroke-linejoin="round"/>
+  <circle cx="175" cy="207" r="4.5" class="f-name"/><circle cx="274" cy="191" r="3.5" class="f-place"/><circle cx="119" cy="199" r="4.5" class="f-animal"/><circle cx="212" cy="244" r="3.5" class="f-thing"/><circle cx="100" cy="165" r="3.5" class="f-name"/><circle cx="226" cy="123" r="4.5" class="f-place"/><circle cx="217" cy="216" r="4.5" class="f-animal"/><circle cx="191" cy="126" r="4.5" class="f-thing"/><circle cx="120" cy="155" r="3.5" class="f-name"/><circle cx="86" cy="191" r="3.5" class="f-place"/><circle cx="173" cy="252" r="4.5" class="f-animal"/><circle cx="176" cy="161" r="4.5" class="f-thing"/><circle cx="256" cy="231" r="4.5" class="f-name"/><circle cx="146" cy="153" r="5.5" class="f-place"/><circle cx="141" cy="127" r="3.5" class="f-animal"/><circle cx="241" cy="181" r="4.5" class="f-thing"/><circle cx="95" cy="218" r="3.5" class="f-name"/><circle cx="247" cy="145" r="3.5" class="f-place"/><circle cx="197" cy="188" r="3.5" class="f-animal"/><circle cx="120" cy="235" r="3.5" class="f-thing"/><circle cx="144" cy="259" r="4.5" class="f-name"/><circle cx="158" cy="189" r="5.5" class="f-place"/><circle cx="169" cy="133" r="5.5" class="f-animal"/><circle cx="205" cy="164" r="3.5" class="f-thing"/><circle cx="154" cy="227" r="4.5" class="f-name"/><circle cx="224" cy="148" r="5.5" class="f-place"/><circle cx="188" cy="233" r="5.5" class="f-animal"/><circle cx="257" cy="207" r="5.5" class="f-thing"/><circle cx="236" cy="247" r="4.5" class="f-name"/><circle cx="270" cy="167" r="5.5" class="f-place"/><circle cx="134" cy="181" r="5.5" class="f-animal"/><circle cx="190" cy="268" r="5.5" class="f-thing"/><circle cx="110" cy="131" r="3.5" class="f-name"/><circle cx="141" cy="207" r="4.5" class="f-place"/>
+  <polygon points="120,104 150,62 166,78 188,42 210,72 236,104" class="f-white s-ink" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="186" cy="84" r="5.5" class="f-name"/>
+  <circle cx="208" cy="93" r="4" class="f-place"/>
+  <path d="M238 50 L214 68" class="s-faint" stroke-width="1.2" fill="none"/>
+  <text x="242" y="42" class="svg-lab">RECALLED</text>
+  <text x="242" y="55" class="svg-lab">IN THE ROOM</text>
+  <text x="170" y="312" text-anchor="middle" class="svg-lab">EVERYTHING THEY'VE LIVED</text>
+</svg>
+    </div>
+    <div class="two-col">
+      <p>Twenty years of engagements sit in credential slides, and clients skim them. What they remember is the one story told over coffee, the one that made the person across the table sound like someone who has seen this before.</p>
+      <p>That person picks from whatever comes to mind on the day. For most people it is the same five stories, on rotation, for years. The rest is buried under the weeds of the work.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="claim">As AI makes products and proposals look alike, the client is choosing the person across the table.</p>
+    <div class="two-col">
+      <p>A client can't fully inspect what they're buying until after they've bought it, so they read the person. What they are reading is judgment, and judgment shows up as stories. <b>I've seen this before. Here's what happened. Here's what we did.</b></p>
+      <p>A person's stories are the one thing a competitor can't copy.</p>
+    </div>
+    <div class="sameness">
+      <p class="cap">Same tools. Same decks. Same pitch.</p>
+      <svg class="row-svg" viewBox="0 0 760 150" role="img" aria-label="Seven identical grey figures in a row. Above each one floats a small dot in a different color: the story that only that person has."><circle cx="62" cy="94" r="17" fill="#CBC2AE"/><path d="M29 146 C29 118 44 113 62 113 C80 113 95 118 95 146 Z" fill="#CBC2AE"/><circle cx="62" cy="46" r="16" fill="var(--name)" opacity=".14"/><circle cx="62" cy="46" r="8" fill="var(--name)"/><circle cx="168" cy="94" r="17" fill="#CBC2AE"/><path d="M135 146 C135 118 150 113 168 113 C186 113 201 118 201 146 Z" fill="#CBC2AE"/><circle cx="168" cy="36" r="18" fill="var(--place)" opacity=".14"/><circle cx="168" cy="36" r="10" fill="var(--place)"/><circle cx="274" cy="94" r="17" fill="#CBC2AE"/><path d="M241 146 C241 118 256 113 274 113 C292 113 307 118 307 146 Z" fill="#CBC2AE"/><circle cx="274" cy="52" r="15" fill="var(--animal)" opacity=".14"/><circle cx="274" cy="52" r="7" fill="var(--animal)"/><circle cx="380" cy="94" r="17" fill="#CBC2AE"/><path d="M347 146 C347 118 362 113 380 113 C398 113 413 118 413 146 Z" fill="#CBC2AE"/><circle cx="380" cy="42" r="17" fill="var(--thing)" opacity=".14"/><circle cx="380" cy="42" r="9" fill="var(--thing)"/><circle cx="486" cy="94" r="17" fill="#CBC2AE"/><path d="M453 146 C453 118 468 113 486 113 C504 113 519 118 519 146 Z" fill="#CBC2AE"/><circle cx="486" cy="54" r="15" fill="var(--place)" opacity=".14"/><circle cx="486" cy="54" r="7" fill="var(--place)"/><circle cx="592" cy="94" r="17" fill="#CBC2AE"/><path d="M559 146 C559 118 574 113 592 113 C610 113 625 118 625 146 Z" fill="#CBC2AE"/><circle cx="592" cy="38" r="18" fill="var(--name)" opacity=".14"/><circle cx="592" cy="38" r="10" fill="var(--name)"/><circle cx="698" cy="94" r="17" fill="#CBC2AE"/><path d="M665 146 C665 118 680 113 698 113 C716 113 731 118 731 146 Z" fill="#CBC2AE"/><circle cx="698" cy="48" r="16" fill="var(--animal)" opacity=".14"/><circle cx="698" cy="48" r="8" fill="var(--animal)"/></svg>
+      <p class="after">Different stories.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="claim">Your competitors have the same AI. Only you have your people's experience.</p>
+    <div class="contrast">
+      <div class="c">
+        <div class="head">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="13" height="17" rx="2"/><path d="M8 8h5M8 12h5M8 16h3"/><path d="M19 7v13a1 1 0 0 1-1 1H8"/></svg></span>
+          <span class="tag">Available to everyone</span>
+        </div>
+        <p class="t">Proposals, decks and follow-ups can be drafted in minutes by anyone. As that gets cheaper, polish stops separating one company from another, and the choice moves to something else.</p>
+      </div>
+      <div class="c yours">
+        <div class="head">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/><path d="M7 12c1.5 0 1.5-4 3-4s1.5 4 3 4 1.5-3 3-3" /></svg></span>
+          <span class="tag">Only yours</span>
+        </div>
+        <p class="t">What's left is what your people have lived: the engagements, the calls they got right, the things they watched go wrong. Almost none of it is written down anywhere, so no model has it. Once the stories are out, AI can help shape them, and the raw material stays yours.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-top"><h2>What happens in the workshop</h2><span class="eyebrow">Name, Place, Animal, Thing</span></div>
+    <div class="steps">
+      <div class="step" style="--k:var(--name)">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 21s7-7.58 7-12A7 7 0 0 0 5 9c0 4.42 7 12 7 12Z"/><circle cx="12" cy="9" r="2.4"/></svg></span>
+        <h3>Map</h3>
+        <p>Places lived and worked down the side, the names you answered to across the top: employee, manager, founder, parent. Most of the grid stays empty. What's left is your territory.</p>
+      </div>
+      <div class="step" style="--k:var(--place)">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M8 3h8l3 6H5l3-6Z"/><path d="M5 9h14L12 21 5 9Z"/><path d="M9 9l3 12M15 9l-3 12M12 3v6"/></svg></span>
+        <h3>Mine</h3>
+        <p>Two probes bring each era back: what you did with your body and breath, and what you made with your hands. Four lenses turn one memory into several stories.</p>
+      </div>
+      <div class="step" style="--k:var(--animal)">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><path d="M8.2 7.5 20 20M8.2 16.5 20 4"/></svg></span>
+        <h3>Cut</h3>
+        <p>Name the feeling, find the shape and the turn, and keep the stories worth telling.</p>
+      </div>
+      <div class="step" style="--k:var(--thing)">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l2 7H7l2-7Z"/><path d="M5 21l3-9M19 21l-3-9M5 21h14"/></svg></span>
+        <h3>Show</h3>
+        <p>The same story runs differently in a first call, a boardroom and over dinner. What moves is where the turn sits.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-top"><h2>Work stories and personal stories</h2><span class="eyebrow">Client conversations need both</span></div>
+    <div class="trio">
+      <div class="kind" style="--k:var(--place)">
+        <div class="top"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/></svg></span><span class="tag">Work</span></div>
+        <h3>Stories that carry judgment</h3>
+        <p>The engagement that went sideways, the call you got right, the client who changed your mind.</p>
+      </div>
+      <div class="kind" style="--k:var(--animal)">
+        <div class="top"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg></span><span class="tag">Personal</span></div>
+        <h3>Stories that carry who you are</h3>
+        <p>They let the client meet the person before they hire the firm.</p>
+      </div>
+      <div class="kind both" style="--k:var(--name)">
+        <div class="top"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg></span><span class="tag">Both</span></div>
+        <h3>The best ones are both</h3>
+        <p>Think of the client call you took on the way to a family wedding. It is a work story, told by a person, and the client hears both.</p>
+      </div>
+    </div>
+    <p class="choice"><b>Everyone chooses which personal stories to share in the room.</b> The rest stay theirs.</p>
+  </section>
+
+  <section>
+    <div class="thread">
+      <div>
+        <span class="eyebrow">The thread</span>
+        <blockquote>My grandfather had people talking to a room. <span>StreamAlive has a room talking to people.</span></blockquote>
+        <p class="how">That line surfaced from my own scattered stories: a grandfather who taught public speaking, improv, stand-up, reading a live chat. I hadn't connected them until I saw them side by side.</p>
+        <p class="then">Once the stories are out, each person can see what they stand for. Across a team, those threads add up to a firm voice that competitors can't copy.</p>
+      </div>
+      <svg class="beads" viewBox="0 0 380 200" role="img" aria-label="Separate stories shown as colored beads, joined into one line that climbs steadily up and to the right toward a larger bead."><path d="M14.0 172.0 C21.7 168.7 44.7 157.7 60.0 152.0 C75.3 146.3 90.7 139.8 106.0 138.0 C121.3 136.2 135.7 146.3 152.0 141.0 C168.3 135.7 187.3 111.5 204.0 106.0 C220.7 100.5 236.0 114.0 252.0 108.0 C268.0 102.0 284.3 81.7 300.0 70.0 C315.7 58.3 338.3 43.3 346.0 38.0" fill="none" stroke="#F5B54A" stroke-width="2.6" stroke-linecap="round" opacity=".55"/><circle cx="60" cy="152" r="9" fill="#F5B54A"/><circle cx="106" cy="138" r="10" fill="#4FC27F"/><circle cx="152" cy="141" r="11" fill="#A78BFA"/><circle cx="204" cy="106" r="9" fill="#FF7A5C"/><circle cx="252" cy="108" r="10" fill="#F5B54A"/><circle cx="300" cy="70" r="11" fill="#4FC27F"/><circle cx="346" cy="38" r="21" fill="none" stroke="#F5B54A" stroke-width="1.6" opacity=".55"/><circle cx="346" cy="38" r="13" fill="#F5B54A"/></svg>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-top"><h2>What it looks like</h2><span class="eyebrow">Small groups, so everyone gets airtime</span></div>
+    <div class="formats">
+      <div class="format" style="--k:var(--place)">
+        <div class="top"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 19c0-3.3 2.7-5 6-5s6 1.7 6 5"/><circle cx="17" cy="9" r="2.4"/><path d="M17 14c2.5 0 4 1.4 4 4"/></svg></span><span class="tag">In person</span></div>
+        <h3>One half-day</h3>
+        <p>4 hours with a break, in your office or offsite.</p>
+      </div>
+      <div class="format" style="--k:var(--animal)">
+        <div class="top"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="M15.5 10.5 21.5 7v10l-6-3.5"/></svg></span><span class="tag">On Zoom or Teams</span></div>
+        <h3>2 hours, a break, 2 hours</h3>
+        <p>One sitting, so the group leaves with a body of work. It can be split across two days if your team needs that.</p>
+      </div>
+    </div>
+    <p class="zoomnote"><b>It works well on Zoom and Teams.</b> I've run two of Training Magazine Network's most interactive webinars, each with hundreds of participants and the room actively participating like never before. You can catch the recordings <a href="https://www.trainingmagnetwork.com/events/4609" target="_blank" rel="noopener">here</a> and <a href="https://www.trainingmagnetwork.com/events/4514" target="_blank" rel="noopener">here</a>.</p>
+
+    <div class="tl-head"><h3>Three check-ins keep it alive</h3><span class="eyebrow">Short, virtual</span></div>
+    <ol class="timeline">
+      <li style="--k:var(--ink)"><span class="when">The workshop</span><span class="what">4 hours. Everyone leaves with a library of stories.</span></li>
+      <li style="--k:var(--name)"><span class="when">Week 1</span><span class="what">Tell one story to a real client. Bring back what happened.</span></li>
+      <li style="--k:var(--place)"><span class="when">Month 1</span><span class="what">Review the library and mine a second era.</span></li>
+      <li style="--k:var(--animal)"><span class="when">Quarter</span><span class="what">Pull the stories into each person's thread.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="sec-top"><h2>About me</h2><span class="eyebrow">Track record</span></div>
+    <div class="cred-row">
+      <img class="avatar" src="data:image/jpeg;base64,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" alt="Lux Narayan" width="104" height="104">
+      <div>
+        <p class="lede" style="margin-bottom:20px">I didn't arrive at this as theory.</p>
+        <div class="cred">
+          <div class="cred-item"><b style="color:var(--name)">TED</b><p>The talk on what obituaries reveal about living well. Watched more than two million times.</p></div>
+          <div class="cred-item"><b style="color:var(--place)">Stage</b><p>Years speaking from stages, plus a handful of open mics, one of them at the Comedy Cellar. All hunting the same thing: the one detail that makes a room lean in.</p></div>
+          <div class="cred-item"><b style="color:var(--animal)">The book</b><p>Name, Place, Animal, Thing, an Amazon bestseller. This workshop is the method inside it.</p></div>
+        </div>
+        <p class="cred-more"><a href="https://luxnarayan.com" target="_blank" rel="noopener">The talk, the stand-up and more at luxnarayan.com <span aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+    <p class="pull">I founded StreamAlive after two years of watching live audiences get ignored. <b>Every method in this workshop, I used on myself first.</b></p>
+  </section>
+
+  <section>
+    <div class="cta-box">
+      <span class="eyebrow">Start here</span>
+      <h2>Bring this to your team</h2>
+      <p class="note">We start with a conversation about your people, the format that suits them, and what you'd like them to leave with.</p>
+      <div class="cta-row">
+        <a class="btn" href="https://tidycal.com/lux/30min" target="_blank" rel="noopener">Book a conversation <span class="arrow">→</span></a>
+      </div>
+      <p class="note" style="margin:20px 0 0;font-size:15px">Prefer to message first? <a href="https://www.linkedin.com/in/luxnarayan/" target="_blank" rel="noopener" style="text-decoration:underline;text-underline-offset:3px">Find me on LinkedIn</a>.</p>
+      <a class="backhome" href="index.html">← Looking to learn this for yourself? See the individuals page</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>StoryMining · Name, Place, Animal, Thing</span>
+    <span><a href="index.html">For individuals</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/luxnarayan/" target="_blank" rel="noopener">LinkedIn</a></span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>
